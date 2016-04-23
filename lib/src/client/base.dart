@@ -57,3 +57,36 @@ abstract class ConduitObject<T> {
   T json;
   void decode(T input);
 }
+
+typedef Future<ConduitCursor<T>> ConduitCursorProvider<T>();
+
+class ConduitCursor<T> extends DelegatingList<T> {
+  ConduitCursorProvider<T> next;
+
+  int offset = 0;
+  int limit = 0;
+  int after = 0;
+  int before = 0;
+
+  ConduitCursor(List<T> base) : super(base);
+
+  Future<ConduitCursor<T>> fetchNext() async {
+    if (next != null) {
+      return await next();
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<T>> fetchAll() async {
+    var out = <T>[];
+
+    var cursor = this;
+    while (cursor != null) {
+      out.addAll(cursor);
+      cursor = await cursor.fetchNext();
+    }
+
+    return out;
+  }
+}

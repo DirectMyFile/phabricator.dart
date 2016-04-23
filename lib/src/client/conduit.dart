@@ -7,3 +7,4 @@ class ConduitMethodDescriptor {
 
   ConduitMethodDescriptor(this.description, this.params, this.returns);
 }
+

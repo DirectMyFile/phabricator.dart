@@ -21,7 +21,7 @@ class ProjectConduitService extends ConduitService {
   @override
   String get group => "project";
 
-  Future<Map<String, Project>> query({
+  Future<ConduitCursor<Project>> query({
     List<int> ids,
     List<String> names,
     List<String> phids,
@@ -47,17 +47,44 @@ class ProjectConduitService extends ConduitService {
     }, params);
 
     var result = await callMethod("query", params);
-    var out = {};
+    var data = result["data"];
+    var cursor = result["cursor"];
 
-    if (result is Map) {
-      for (String key in result.keys) {
+    var out = <Project>[];
+
+    if (data is Map) {
+      for (String key in data.keys) {
         var project = new Project();
-        project.decode(result[key]);
-        out[key] = project;
+        project.decode(data[key]);
+        out.add(project);
       }
     }
 
-    return out;
+    var list = new ConduitCursor<Project>(out);
+
+    list
+      ..limit = cursor["limit"]
+      ..after = cursor["after"]
+      ..before = cursor["before"]
+      ..offset = offset == null ? 0 : offset;
+
+    list.next = () async {
+      if (list.after != null) {
+        return await query(
+          ids: ids,
+          names: names,
+          phids: phids,
+          slugs: slugs,
+          icons: icons,
+          colors: colors,
+          members: members,
+          limit: limit,
+          offset: list.after
+        );
+      }
+    };
+
+    return list;
   }
 }
 
@@ -89,4 +116,7 @@ class Project extends ConduitObject<Map<String, dynamic>> {
     dateCreated = json["dateCreated"];
     dateModified = json["dateModified"];
   }
+
+  @override
+  String toString() => "Project(name: ${name}, phid: ${phid})";
 }
