@@ -7,6 +7,22 @@ class ProjectStatus implements ConduitEncodable {
   static const ProjectStatus ACTIVE = const ProjectStatus("status-active");
   static const ProjectStatus ARCHIVED = const ProjectStatus("status-archived");
 
+  static ProjectStatus decode(String input) {
+    var status = const {
+      "status-any": ANY,
+      "status-open": OPEN,
+      "status-closed": CLOSED,
+      "status-active": ACTIVE,
+      "status-archived": ARCHIVED
+    }[input];
+
+    if (status == null) {
+      status = new ProjectStatus(input);
+    }
+
+    return status;
+  }
+
   final String id;
 
   const ProjectStatus(this.id);
@@ -89,7 +105,8 @@ class ProjectConduitService extends ConduitService {
 }
 
 class Project extends ConduitObject<Map<String, dynamic>> {
-  String id;
+  int id;
+  ProjectStatus status;
   String phid;
   String name;
   String profileImagePhid;
@@ -105,7 +122,8 @@ class Project extends ConduitObject<Map<String, dynamic>> {
   void decode(Map<String, dynamic> input) {
     json = input;
 
-    id = json["id"];
+    id = ConduitUtils.asInt(json["id"]);
+    status = ProjectStatus.decode(json["status"]);
     phid = json["phid"];
     name = json["name"];
     profileImagePhid = json["profileImagePHID"];

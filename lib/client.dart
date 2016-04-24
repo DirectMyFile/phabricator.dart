@@ -5,7 +5,6 @@ import "dart:convert";
 import "dart:typed_data";
 
 import "package:http/http.dart" as http;
-
 import "package:collection/collection.dart";
 
 part "src/client/base.dart";
@@ -18,3 +17,5 @@ part "src/client/conpherence.dart";
 part "src/client/file.dart";
 part "src/client/harbormaster.dart";
 part "src/client/diffusion.dart";
+part "src/client/maniphest.dart";
+part "src/client/user.dart";

@@ -78,4 +78,18 @@ class ConduitClient {
     _diffusion == null ?
       _diffusion = new DiffusionConduitService(this) :
       _diffusion;
+
+  ManiphestConduitService _maniphest;
+
+  ManiphestConduitService get maniphest =>
+    _maniphest == null ?
+      _maniphest = new ManiphestConduitService(this) :
+      _maniphest;
+
+  UserConduitService _user;
+
+  UserConduitService get user =>
+    _user == null ?
+      _user = new UserConduitService(this) :
+      _user;
 }

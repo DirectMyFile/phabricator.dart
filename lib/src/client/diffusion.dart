@@ -12,6 +12,8 @@ class DiffusionSymbol extends ConduitObject<Map<String, dynamic>> {
 
   @override
   void decode(Map<String, dynamic> input) {
+    json = input;
+
     name = input["name"];
     context = input["context"];
     type = input["type"];
