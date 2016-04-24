@@ -71,4 +71,11 @@ class ConduitClient {
     _harbormaster == null ?
       _harbormaster = new HarbormasterConduitService(this) :
       _harbormaster;
+
+  DiffusionConduitService _diffusion;
+
+  DiffusionConduitService get diffusion =>
+    _diffusion == null ?
+      _diffusion = new DiffusionConduitService(this) :
+      _diffusion;
 }

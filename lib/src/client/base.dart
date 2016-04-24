@@ -47,6 +47,21 @@ class ConduitUtils {
       target[key] = value;
     }
   }
+
+  static int asInt(input) {
+    if (input == null) {
+      return -1;
+    }
+
+    if (input is int) {
+      return input;
+    } else if (input is num) {
+      return input.toInt();
+    } else if (input is String) {
+      return int.parse(input, onError: (source) => -1);
+    }
+    return -1;
+  }
 }
 
 abstract class ConduitEncodable {
@@ -108,5 +123,9 @@ class ConduitBlob {
     } else {
       return bytes;
     }
+  }
+
+  String readText() {
+    return UTF8.decode(read());
   }
 }

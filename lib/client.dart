@@ -17,3 +17,4 @@ part "src/client/project.dart";
 part "src/client/conpherence.dart";
 part "src/client/file.dart";
 part "src/client/harbormaster.dart";
+part "src/client/diffusion.dart";
