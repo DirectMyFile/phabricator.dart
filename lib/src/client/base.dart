@@ -90,3 +90,23 @@ class ConduitCursor<T> extends DelegatingList<T> {
     return out;
   }
 }
+
+class ConduitBlob {
+  final String base64;
+
+  ConduitBlob(this.base64);
+
+  factory ConduitBlob.fromBytes(List<int> bytes) {
+    return new ConduitBlob(BASE64.encode(bytes));
+  }
+
+  Uint8List read() {
+    var bytes = BASE64.decode(base64);
+
+    if (bytes is! Uint8List) {
+      return new Uint8List.fromList(bytes);
+    } else {
+      return bytes;
+    }
+  }
+}

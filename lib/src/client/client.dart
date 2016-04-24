@@ -47,5 +47,28 @@ class ConduitClient {
 
   ProjectConduitService _project;
   ProjectConduitService get project =>
-    _project == null ? _project = new ProjectConduitService(this) : _project;
+    _project == null ?
+      _project = new ProjectConduitService(this) :
+      _project;
+
+  ConpherenceConduitService _conpherence;
+
+  ConpherenceConduitService get conpherence =>
+    _conpherence == null ?
+      _conpherence = new ConpherenceConduitService(this) :
+      _conpherence;
+
+  FileConduitService _file;
+
+  FileConduitService get file =>
+    _file == null ?
+      _file = new FileConduitService(this) :
+      _file;
+
+  HarbormasterConduitService _harbormaster;
+
+  HarbormasterConduitService get harbormaster =>
+    _harbormaster == null ?
+      _harbormaster = new HarbormasterConduitService(this) :
+      _harbormaster;
 }
