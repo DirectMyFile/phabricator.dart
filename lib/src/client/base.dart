@@ -32,6 +32,10 @@ class ConduitUtils {
         continue;
       }
 
+      if (value is Uint8List) {
+        value = BASE64.encode(value);
+      }
+
       if (value is Iterable && value is! List) {
         value = value.toList();
       }
