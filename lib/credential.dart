@@ -51,8 +51,13 @@ class CredentialStore {
     } else {
       await file.create(recursive: true);
       await file.writeAsString(const JsonEncoder.withIndent("  ").convert({
-        "defaultHost": null,
-        "hosts": {}
+        "defaultHost": "default",
+        "hosts": {
+          "default": {
+            "url": "https://secure.phabricator.com",
+            "token": "MY-TOKEN"
+          }
+        }
       }) + "\n");
     }
   }

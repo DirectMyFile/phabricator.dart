@@ -7,7 +7,8 @@ main(List<String> args) async {
   var tasks = await client.maniphest.query();
 
   for (ManiphestTask task in tasks) {
-    print("- (${task.objectName}): ${task.title}");
+    print("(${task.objectName}): ${task.title}");
+    print("  PHID: ${task.phid}");
   }
 
   ConduitUtils.closeHttpClient();

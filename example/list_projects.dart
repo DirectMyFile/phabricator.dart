@@ -8,7 +8,7 @@ main(List<String> args) async {
   var projects = await cursor.fetchAll();
 
   for (Project project in projects) {
-    print("- ${project.name}");
+    print("${project.name}");
     print("  PHID: ${project.phid}");
   }
 

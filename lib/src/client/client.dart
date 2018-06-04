@@ -45,6 +45,16 @@ class ConduitClient {
     return await callMethod("conduit.ping", {});
   }
 
+  Future<ConduitCapabilities> getCapabilities() async {
+    var result = await callMethod("conduit.getcapabilities", {});
+    return new ConduitCapabilities()..decode(result);
+  }
+
+  Future<ConduitMethodQueryResult> getMethods() async {
+    var result = await callMethod("conduit.query", {});
+    return new ConduitMethodQueryResult()..decode(result);
+  }
+
   ProjectConduitService _project;
   ProjectConduitService get project =>
     _project == null ?

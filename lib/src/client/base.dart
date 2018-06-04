@@ -74,6 +74,7 @@ abstract class ConduitEncodable {
 
 abstract class ConduitObject<T> {
   T json;
+  
   void decode(T input);
 }
 
