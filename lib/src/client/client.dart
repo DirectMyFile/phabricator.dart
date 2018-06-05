@@ -41,27 +41,25 @@ class ConduitClient {
   }
 
   Future<dynamic> callMethod(String method, Map<String, dynamic> params) async {
-    var out = new Map<String, dynamic>.from(params);
+    var fullParams = new Map<String, dynamic>.from(params);
     var url = baseUri.resolve("/api/${method}");
 
-    var body = "api.token=${Uri.encodeQueryComponent(token)}";
-
-    for (var key in params.keys) {
-      var value = out[key];
-      if (value is List) {
-        var i = 0;
-        for (var entry in value) {
-          body += "&${key}[${i}]=${Uri.encodeQueryComponent(entry.toString())}";
-          i++;
-        }
-      } else {
-        body += "&${key}=${Uri.encodeQueryComponent(value.toString())}";
+    if (token != null) {
+      if (fullParams["__conduit__"] is! Map) {
+        fullParams["__conduit__"] = {};
       }
+
+      fullParams["__conduit__"] = {
+        "token": token
+      };
     }
 
     var response = await ConduitUtils.httpClient.post(
       url,
-      body: body,
+      body: {
+        "output": "json",
+        "params": JSON.encode(fullParams)
+      },
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
@@ -143,4 +141,10 @@ class ConduitClient {
     _phabulous == null ?
       _phabulous = new PhabulousConduitService(this) :
       _phabulous;
+
+  PhurlConduitService _phurl;
+  PhurlConduitService get phurl =>
+    _phurl == null ?
+      _phurl = new PhurlConduitService(this) :
+      _phurl;
 }

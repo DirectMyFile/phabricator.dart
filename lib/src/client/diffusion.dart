@@ -61,4 +61,14 @@ class DiffusionConduitService extends ConduitService {
 
     return out;
   }
+
+  DiffusionRepositoryConduitService _repository;
+
+  DiffusionRepositoryConduitService get repository {
+    if (_repository != null) {
+      return _repository;
+    }
+
+    return _repository = new DiffusionRepositoryConduitService(client);
+  }
 }

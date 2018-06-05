@@ -15,7 +15,8 @@ class ConduitUtils {
     
     String errorMessage = tryMultipleKeys(const [
       "error_description",
-      "error_info"
+      "error_info",
+      "errorMessage"
     ], json);
 
     if (error != null || errorMessage != null) {
@@ -31,7 +32,7 @@ class ConduitUtils {
 
   static void put(Map input, Map target) {
     for (var key in input.keys) {
-      var value = target[key];
+      var value = input[key];
 
       if (value == null) {
         continue;
@@ -41,8 +42,14 @@ class ConduitUtils {
         value = BASE64.encode(value);
       }
 
-      if (value is Iterable && value is! List) {
-        value = value.toList();
+      if (value is Iterable) {
+        value = value.map((item) {
+          if (item is ConduitEncodable) {
+            return item.encode();
+          } else {
+            return item;
+          }
+        }).toList();
       }
 
       if (value is List && value.isEmpty) {
