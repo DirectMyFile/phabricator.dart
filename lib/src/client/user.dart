@@ -35,11 +35,12 @@ class UserConduitService extends ConduitService {
   UserConduitService(ConduitClient client) : super(client);
 
   @override
-  String get group => "whoami";
+  String get group => "user";
 
   Future<LoggedInUser> whoAmI() async  {
     var user = new LoggedInUser();
-    user.decode(await callMethod("whoami", {}));
+    var whoAmI = await callMethod("whoami", {});
+    user.decode(whoAmI);
     return user;
   }
 

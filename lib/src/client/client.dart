@@ -17,6 +17,18 @@ abstract class ConduitService {
   }
 }
 
+final JsonEncoder _jsonEncoder = new JsonEncoder(
+  (x) {
+    if (x is ConduitObject &&
+        x.json is Map &&
+        x.json["phid"] is String) {
+      return x.json["phid"];
+    }
+
+    return x;
+  }
+);
+
 class ConduitClient {
   final Uri baseUri;
 
@@ -30,15 +42,32 @@ class ConduitClient {
 
   Future<dynamic> callMethod(String method, Map<String, dynamic> params) async {
     var out = new Map<String, dynamic>.from(params);
+    var url = baseUri.resolve("/api/${method}");
 
-    if (token != null) {
-      out["api.token"] = token;
+    var body = "api.token=${Uri.encodeQueryComponent(token)}";
+
+    for (var key in params.keys) {
+      var value = out[key];
+      if (value is List) {
+        var i = 0;
+        for (var entry in value) {
+          body += "&${key}[${i}]=${Uri.encodeQueryComponent(entry.toString())}";
+          i++;
+        }
+      } else {
+        body += "&${key}=${Uri.encodeQueryComponent(value.toString())}";
+      }
     }
 
-    return ConduitUtils.handleResponse(await ConduitUtils.httpClient.post(
-      baseUri.resolve("/api/${method}"),
-      body: out
-    ));
+    var response = await ConduitUtils.httpClient.post(
+      url,
+      body: body,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    );
+
+    return ConduitUtils.handleResponse(response);
   }
 
   Future<String> ping() async {
@@ -55,6 +84,12 @@ class ConduitClient {
     return new ConduitMethodQueryResult()..decode(result);
   }
 
+  AuthConduitService _auth;
+  AuthConduitService get auth =>
+    _auth == null ?
+      _auth = new AuthConduitService(this) :
+      _auth;
+
   ProjectConduitService _project;
   ProjectConduitService get project =>
     _project == null ?
@@ -62,44 +97,50 @@ class ConduitClient {
       _project;
 
   ConpherenceConduitService _conpherence;
-
   ConpherenceConduitService get conpherence =>
     _conpherence == null ?
       _conpherence = new ConpherenceConduitService(this) :
       _conpherence;
 
   FileConduitService _file;
-
   FileConduitService get file =>
     _file == null ?
       _file = new FileConduitService(this) :
       _file;
 
   HarbormasterConduitService _harbormaster;
-
   HarbormasterConduitService get harbormaster =>
     _harbormaster == null ?
       _harbormaster = new HarbormasterConduitService(this) :
       _harbormaster;
 
   DiffusionConduitService _diffusion;
-
   DiffusionConduitService get diffusion =>
     _diffusion == null ?
       _diffusion = new DiffusionConduitService(this) :
       _diffusion;
 
   ManiphestConduitService _maniphest;
-
   ManiphestConduitService get maniphest =>
     _maniphest == null ?
       _maniphest = new ManiphestConduitService(this) :
       _maniphest;
 
   UserConduitService _user;
-
   UserConduitService get user =>
     _user == null ?
       _user = new UserConduitService(this) :
       _user;
+
+  MacroConduitService _macro;
+  MacroConduitService get macro =>
+    _macro == null ?
+      _macro = new MacroConduitService(this) :
+      _macro;
+
+  PhabulousConduitService _phabulous;
+  PhabulousConduitService get phabulous =>
+    _phabulous == null ?
+      _phabulous = new PhabulousConduitService(this) :
+      _phabulous;
 }

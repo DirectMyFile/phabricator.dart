@@ -29,6 +29,9 @@ class ManiphestStatus implements ConduitEncodable {
 
   @override
   encode() => id;
+
+  @override
+  String toString() => "ManiphestStatus(${id})";
 }
 
 class ManiphestTask extends ConduitObject<Map<String, dynamic>> {

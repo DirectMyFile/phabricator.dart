@@ -24,7 +24,10 @@ class FileConduitService extends ConduitService {
     } else if (data is ByteBuffer) {
       bytes = data.asUint8List();
     } else if (data is TypedData) {
-      bytes = data.buffer.asUint8List();
+      bytes = data.buffer.asUint8List(
+        data.offsetInBytes,
+        data.lengthInBytes
+      );
     } else if (data is List<int>) {
       bytes = new Uint8List.fromList(data);
     } else if (data is String) {

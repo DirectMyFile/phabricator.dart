@@ -4,14 +4,19 @@ class ConduitUtils {
   static http.Client httpClient = new http.Client();
 
   static dynamic handleResponse(http.Response response, {
-    String resultKey: "result",
-    String errorKey: "error",
-    String errorMessageKey: "errorMessage"
+    String resultKey: "result"
   }) {
     var json = JSON.decode(response.body);
 
-    String error = json[errorKey];
-    String errorMessage = json[errorMessageKey];
+    String error = tryMultipleKeys(const [
+      "error_code",
+      "error"
+    ], json);
+    
+    String errorMessage = tryMultipleKeys(const [
+      "error_description",
+      "error_info"
+    ], json);
 
     if (error != null || errorMessage != null) {
       throw new ConduitException(error, errorMessage);
@@ -66,6 +71,16 @@ class ConduitUtils {
     }
     return -1;
   }
+  
+  static dynamic tryMultipleKeys(List<String> keys, Map<String, dynamic> input) {
+    for (var key in keys) {
+      var value = input[key];
+
+      if (value != null) return value;
+    }
+    
+    return null;
+  }
 }
 
 abstract class ConduitEncodable {
@@ -90,6 +105,24 @@ class ConduitCursor<T> extends DelegatingList<T> {
 
   ConduitCursor(List<T> base) : super(base);
 
+  factory ConduitCursor.create(Map<String, dynamic> input, {int offset, T convert(item)}) {
+    var allData = input["data"];
+    var cursor = input["cursor"];
+
+    if (convert != null) {
+      allData = allData.map((item) => convert(item)).toList();
+    }
+
+    var list = new ConduitCursor<T>(allData);
+
+    list
+      ..limit = cursor["limit"]
+      ..after = cursor["after"]
+      ..before = cursor["before"]
+      ..offset = offset == null ? 0 : offset;
+    return list;
+  }
+
   Future<ConduitCursor<T>> fetchNext() async {
     if (next != null) {
       return await next();
@@ -108,6 +141,13 @@ class ConduitCursor<T> extends DelegatingList<T> {
     }
 
     return out;
+  }
+  
+  ConduitCursor<T> setNextCallback(ConduitCursorProvider<T> handler) {
+    if (after != null) {
+      next = handler;
+    }
+    return this;
   }
 }
 

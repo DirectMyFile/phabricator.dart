@@ -45,21 +45,21 @@ class CredentialStore {
   }
 
   Future loadFromFile(File file) async {
-    if (await file.exists()) {
-      var content = await file.readAsString();
-      load(const JsonDecoder().convert(content));
-    } else {
+    if (!(await file.exists())) {
       await file.create(recursive: true);
       await file.writeAsString(const JsonEncoder.withIndent("  ").convert({
         "defaultHost": "default",
         "hosts": {
           "default": {
-            "url": "https://secure.phabricator.com",
+            "url": "http://phabricator.example.com",
             "token": "MY-TOKEN"
           }
         }
       }) + "\n");
     }
+
+    var content = await file.readAsString();
+    load(const JsonDecoder().convert(content));
   }
 
   CredentialHost get defaultHost {
@@ -94,5 +94,10 @@ Future<CredentialStore> loadDefaultCredentialStore() async {
 Future<ConduitClient> createDefaultConduitClient() async {
   var store = await loadDefaultCredentialStore();
   var host = store.defaultHost;
+
+  if (host == null) {
+    throw new Exception("Failed to get default host.");
+  }
+
   return new ConduitClient(host.url, token: host.token);
 }

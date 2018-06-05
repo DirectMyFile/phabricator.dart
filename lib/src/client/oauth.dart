@@ -21,7 +21,6 @@ class OAuthUtils {
 
     return ConduitUtils.handleResponse(
       response,
-      errorMessageKey: "error_description",
       resultKey: "access_token"
     );
   }

@@ -8,6 +8,7 @@ import "package:http/http.dart" as http;
 
 import "package:collection/collection.dart";
 
+part "src/client/auth.dart";
 part "src/client/base.dart";
 part "src/client/oauth.dart";
 part "src/client/exceptions.dart";
@@ -20,3 +21,5 @@ part "src/client/harbormaster.dart";
 part "src/client/diffusion.dart";
 part "src/client/maniphest.dart";
 part "src/client/user.dart";
+part "src/client/phabulous.dart";
+part "src/client/macro.dart";
