@@ -5,3 +5,6 @@ packages
 *.iml
 .DS_Store
 pubspec.lock
+
+example/personal
+
