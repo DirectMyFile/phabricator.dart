@@ -1,4 +1,4 @@
-part of phabicator.client;
+part of phabricator.client;
 
 class ShortUrl extends ConduitObject<Map<String, dynamic>> {
   String name;
