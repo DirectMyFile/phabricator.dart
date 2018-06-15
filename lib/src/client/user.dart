@@ -1,7 +1,6 @@
 part of phabricator.client;
 
 class User extends ConduitObject<Map<String, dynamic>> {
-  String phid;
   String username;
   String realname;
   String image;
@@ -31,8 +30,8 @@ class LoggedInUser extends User {
   }
 }
 
-class UserConduitService extends ConduitService {
-  UserConduitService(ConduitClient client) : super(client);
+class UserConduitService extends SearchableConduitService<User> {
+  UserConduitService(ConduitClient client) : super(client, "USER");
 
   @override
   String get group => "user";

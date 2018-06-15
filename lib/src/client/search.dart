@@ -15,11 +15,7 @@ class ConduitSearch<T extends ConduitObject> extends ConduitObject<Map<String, d
     id = input["id"];
     fields = input["fields"];
     attachments = input["attachments"];
-
-    if (stubItem != null) {
-      item = stubItem;
-      item.decode(fields);
-    }
+    item = stubItem;
   }
 
   dynamic getAttachment(String key) =>

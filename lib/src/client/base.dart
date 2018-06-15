@@ -95,6 +95,9 @@ abstract class ConduitEncodable {
 }
 
 abstract class ConduitObject<T> {
+  int id;
+  String phid;
+
   T json;
   
   void decode(T input);

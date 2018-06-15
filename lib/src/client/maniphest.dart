@@ -35,8 +35,6 @@ class ManiphestStatus implements ConduitEncodable {
 }
 
 class ManiphestTask extends ConduitObject<Map<String, dynamic>> {
-  int id;
-  String phid;
   String authorPhid;
   String ownerPhid;
   List<String> ccPhids;
@@ -68,8 +66,10 @@ class ManiphestTask extends ConduitObject<Map<String, dynamic>> {
     isClosed = input["isClosed"];
     priority = input["priority"];
     priorityColor = input["priorityColor"];
-    title = input["title"];
-    description = input["description"];
+    title = input["title"] is String ? input["title"] : input["name"];
+    description = input["description"] is String ?
+      input["description"] :
+      input["description"]["raw"];
     uri = input["uri"];
     auxiliary = input["auxiliary"];
     objectName = input["objectName"];
@@ -79,8 +79,8 @@ class ManiphestTask extends ConduitObject<Map<String, dynamic>> {
   }
 }
 
-class ManiphestConduitService extends ConduitService {
-  ManiphestConduitService(ConduitClient client) : super(client);
+class ManiphestConduitService extends SearchableConduitService<ManiphestTask> {
+  ManiphestConduitService(ConduitClient client) : super(client, "TASK");
 
   @override
   String get group => "maniphest";

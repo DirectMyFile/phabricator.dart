@@ -4,10 +4,13 @@ import "package:phabricator/credential.dart";
 main(List<String> args) async {
   var client = await createDefaultConduitClient();
 
-  var tasks = await client.maniphest.query();
+  var cursor = await client.maniphest.search();
+  var results = await cursor.fetchAll();
 
-  for (ManiphestTask task in tasks) {
-    print("(${task.objectName}): ${task.title}");
+  for (var result in results) {
+    var task = result.item;
+
+    print("${task.title}");
     print("  PHID: ${task.phid}");
   }
 

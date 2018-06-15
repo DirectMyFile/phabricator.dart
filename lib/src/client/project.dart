@@ -31,8 +31,8 @@ class ProjectStatus implements ConduitEncodable {
   encode() => id;
 }
 
-class ProjectConduitService extends ConduitService {
-  ProjectConduitService(ConduitClient client) : super(client);
+class ProjectConduitService extends SearchableConduitService<Project> {
+  ProjectConduitService(ConduitClient client) : super(client, "PROJECT");
 
   @override
   String get group => "project";
@@ -105,9 +105,7 @@ class ProjectConduitService extends ConduitService {
 }
 
 class Project extends ConduitObject<Map<String, dynamic>> {
-  int id;
   ProjectStatus status;
-  String phid;
   String name;
   String profileImagePhid;
   String icon;
