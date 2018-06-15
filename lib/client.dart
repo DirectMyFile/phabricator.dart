@@ -23,9 +23,11 @@ part "src/client/harbormaster.dart";
 part "src/client/diffusion.dart";
 part "src/client/maniphest.dart";
 part "src/client/user.dart";
-part "src/client/phabulous.dart";
 part "src/client/macro.dart";
 part "src/client/types.dart";
 part "src/client/phurl.dart";
+
+/* External Extensions */
+part "src/client/phabulous.dart";
 
 part "src/client/diffusion/repository.dart";
