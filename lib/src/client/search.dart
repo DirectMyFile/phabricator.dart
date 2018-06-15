@@ -13,6 +13,7 @@ class ConduitSearch<T extends ConduitObject> extends ConduitObject<Map<String, d
   void decode(Map<String, dynamic> input, [T stubItem]) {
     json = input;
     id = input["id"];
+    phid = input["phid"];
     fields = input["fields"];
     attachments = input["attachments"];
     item = stubItem;

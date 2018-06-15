@@ -11,6 +11,7 @@ class User extends ConduitObject<Map<String, dynamic>> {
   void decode(Map<String, dynamic> input) {
     json = input;
 
+    id = input["id"];
     phid = input["phid"];
     username = input["userName"];
     realname = input["realName"];
