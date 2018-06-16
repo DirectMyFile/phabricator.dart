@@ -19,6 +19,9 @@ class DiffusionRepository extends ConduitObject<Map<String, dynamic>> {
   void decode(Map<String, dynamic> input) {
     json = input;
 
+    id = input["id"];
+    phid = input["phid"];
+
     name = input["name"];
     vcs = input["vcs"];
     callsign = input["callsign"];
@@ -32,54 +35,10 @@ class DiffusionRepository extends ConduitObject<Map<String, dynamic>> {
   }
 }
 
-class DiffusionRepositoryConduitService extends ConduitService {  
+class DiffusionRepositoryConduitService extends
+  SearchableConduitService<DiffusionRepository> {
   @override
   String get group => "diffusion.repository";
 
-  DiffusionRepositoryConduitService(ConduitClient client) : super(client);
-
-  Future<ConduitCursor<ConduitSearch<DiffusionRepository>>> search({
-    String queryKey,
-    Map<String, dynamic> constraints,
-    Map<String, bool> attachments,
-    String order,
-    String before,
-    String after,
-    int limit,
-    int offset
-  }) async {
-    var params = {};
-
-    ConduitUtils.put({
-      "queryKey": queryKey,
-      "constraints": constraints,
-      "attachments": attachments,
-      "order": order,
-      "before": before,
-      "after": after,
-      "limit": limit,
-      "offset": offset
-    }, params);
-
-    var result = await callMethod("search", params);
-    var cursor = new ConduitCursor.create(result, convert: (input) {
-      return new ConduitSearch()
-        ..decode(input, new DiffusionRepository());
-    });
-
-    cursor.setNextCallback(() async {
-      return await search(
-        queryKey: queryKey,
-        constraints: constraints,
-        attachments: attachments,
-        order: order,
-        before: before,
-        after: after,
-        limit: limit,
-        offset: cursor.after
-      );
-    });
-
-    return cursor;
-  }
+  DiffusionRepositoryConduitService(ConduitClient client) : super(client, "REPO");
 }
