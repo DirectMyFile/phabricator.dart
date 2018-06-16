@@ -19,8 +19,15 @@ class ConduitSearch<T extends ConduitObject> extends ConduitObject<Map<String, d
     item = stubItem;
   }
 
-  dynamic getAttachment(String key) =>
-    crawlAndApplyConduitTypes(attachments[key]);
+  dynamic getAttachment(String key) {
+    var result = crawlAndApplyConduitTypes(attachments[key]);
+
+    if (result is Map && result.length == 1 && result[key] != null) {
+      result = result[key];
+    }
+
+    return result;
+  }
 }
 
 abstract class SearchableConduitService<T extends ConduitObject> extends ConduitService {

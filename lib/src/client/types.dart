@@ -7,7 +7,10 @@ final Map<String, ConduitTypeFactory> _typeFactories = <String, ConduitTypeFacto
   "TASK": (data) => new ManiphestTask()..decode(data),
   "URL": (data) => new ShortUrl()..decode(data),
   "USER": (data) => new User()..decode(data),
-  "PROJECT": (data) => new Project()..decode(data)
+  "PROJECT": (data) => new Project()..decode(data),
+  "ADEV": (data) => new AlmanacDevice()..decode(data),
+  "AINT": (data) => new AlmanacInterface()..decode(data),
+  "ANET": (data) => new AlmanacNetwork()..decode(data)
 };
 
 void registerConduitType(String type, ConduitTypeFactory typeFactory) {

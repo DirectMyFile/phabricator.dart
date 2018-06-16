@@ -14,8 +14,10 @@ part "src/client/client.dart";
 part "src/client/exceptions.dart";
 part "src/client/oauth.dart";
 part "src/client/search.dart";
+part "src/client/transact.dart";
 
 part "src/client/auth.dart";
+part "src/client/almanac.dart";
 part "src/client/project.dart";
 part "src/client/conpherence.dart";
 part "src/client/file.dart";

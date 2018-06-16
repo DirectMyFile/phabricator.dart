@@ -82,6 +82,12 @@ class ConduitClient {
     return new ConduitMethodQueryResult()..decode(result);
   }
 
+  AlmanacService _almanac;
+  AlmanacService get almanac =>
+    _almanac == null ?
+        _almanac = new AlmanacService(this) :
+        _almanac;
+
   AuthConduitService _auth;
   AuthConduitService get auth =>
     _auth == null ?
