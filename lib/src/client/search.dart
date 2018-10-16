@@ -35,6 +35,8 @@ abstract class SearchableConduitService<T extends ConduitObject> extends Conduit
 
   SearchableConduitService(ConduitClient client, this.searchResultType) : super(client);
 
+  bool get searchUseAfterOffset => false;
+
   Future<ConduitCursor<ConduitSearch<T>>> search({
     String queryKey,
     Map<String, dynamic> constraints,
@@ -71,9 +73,9 @@ abstract class SearchableConduitService<T extends ConduitObject> extends Conduit
         attachments: attachments,
         order: order,
         before: before,
-        after: after,
+        after: searchUseAfterOffset ? cursor.after.toString() : after,
         limit: limit,
-        offset: cursor.after
+        offset: searchUseAfterOffset ? null : cursor.after
       );
     });
 

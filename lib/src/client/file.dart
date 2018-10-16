@@ -44,6 +44,9 @@ class FileConduitService extends SearchableConduitService {
   @override
   String get group => "file";
 
+  @override
+  bool get searchUseAfterOffset => true;
+
   Future<ConduitBlob> download(String phid) async {
     return new ConduitBlob(await callMethod("download", {
       "phid": phid
