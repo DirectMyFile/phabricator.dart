@@ -113,8 +113,8 @@ class Project extends ConduitObject<Map<String, dynamic>> {
   List<String> members;
   List<String> slugs;
 
-  String dateCreated;
-  String dateModified;
+  int dateCreated;
+  int dateModified;
 
   @override
   void decode(Map<String, dynamic> input) {
@@ -129,8 +129,17 @@ class Project extends ConduitObject<Map<String, dynamic>> {
     color = json["color"];
     members = json["members"];
     slugs = json["slugs"];
-    dateCreated = json["dateCreated"];
-    dateModified = json["dateModified"];
+    if (json["dateCreated"] is String) {
+      dateCreated = int.parse(json["dateCreated"]);
+    } else {
+      dateCreated = json["dateCreated"];
+    }
+    
+    if (json["dateModified"] is String) {
+      dateModified = int.parse(json["dateModified"]);
+    } else {
+      dateModified = json["dateModified"];
+    }
   }
 
   @override

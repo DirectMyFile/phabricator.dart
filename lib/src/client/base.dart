@@ -95,8 +95,40 @@ abstract class ConduitEncodable {
 }
 
 abstract class ConduitObject<T> {
-  int id;
-  String phid;
+  int get id {
+    if (_id == null) {
+      if (json != null && json is Map) {
+        var possibleId = (json as Map)["id"];
+        if (possibleId is int) {
+          return _id = possibleId;
+        }
+      }
+    }
+    return _id;
+  }
+
+  set id(int val) {
+    _id = val;
+  }
+
+  int _id;
+
+  String get phid {
+    if (_phid == null) {
+      if (json != null && json is Map) {
+        var possibleId = (json as Map)["phid"];
+        if (possibleId is String) {
+          return _phid = possibleId;
+        }
+      }
+    }
+    return _phid;
+  }
+
+  set phid(String val) {
+    _phid = val;
+  }
+  String _phid;
 
   T json;
   

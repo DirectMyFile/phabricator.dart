@@ -10,7 +10,8 @@ final Map<String, ConduitTypeFactory> _typeFactories = <String, ConduitTypeFacto
   "PROJECT": (data) => new Project()..decode(data),
   "ADEV": (data) => new AlmanacDevice()..decode(data),
   "AINT": (data) => new AlmanacInterface()..decode(data),
-  "ANET": (data) => new AlmanacNetwork()..decode(data)
+  "ANET": (data) => new AlmanacNetwork()..decode(data),
+  "FILE": (data) => new PhabricatorFile()..decode(data)
 };
 
 void registerConduitType(String type, ConduitTypeFactory typeFactory) {
