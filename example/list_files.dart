@@ -8,7 +8,7 @@ main(List<String> args) async {
   var results = await cursor.fetchAll();
 
   for (var result in results) {
-    var file = result.item;
+    var file = result.item as PhabricatorFile;
     print("${file.name}");
     print("  PHID: ${file.phid}");
   }

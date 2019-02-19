@@ -1,12 +1,13 @@
 part of phabricator.client;
 
 class ConduitUtils {
-  static http.Client httpClient = new http.Client();
+  static HttpClient httpClient = new HttpClient();
 
-  static dynamic handleResponse(http.Response response, {
+  static Future<dynamic> handleResponse(HttpClientResponse response, {
     String resultKey: "result"
-  }) {
-    var json = JSON.decode(response.body);
+  }) async {
+    var content = await response.transform(const Utf8Decoder()).join();
+    var json = const JsonDecoder().convert(content);
 
     String error = tryMultipleKeys(const [
       "error_code",
@@ -39,7 +40,7 @@ class ConduitUtils {
       }
 
       if (value is Uint8List) {
-        value = BASE64.encode(value);
+        value = const Base64Encoder().convert(value);
       }
 
       if (value is Iterable) {
@@ -74,7 +75,11 @@ class ConduitUtils {
     } else if (input is num) {
       return input.toInt();
     } else if (input is String) {
-      return int.parse(input, onError: (source) => -1);
+      try {
+        return int.parse(input);
+      } on FormatException {
+        return -1;
+      }
     }
     return -1;
   }
@@ -137,7 +142,9 @@ abstract class ConduitObject<T> {
 
 typedef Future<ConduitCursor<T>> ConduitCursorProvider<T>();
 
-class ConduitCursor<T> extends DelegatingList<T> {
+class ConduitCursor<T> extends ListBase<T> {
+  final List<T> base;
+
   ConduitCursorProvider<T> next;
 
   int offset = 0;
@@ -145,7 +152,19 @@ class ConduitCursor<T> extends DelegatingList<T> {
   int after = 0;
   int before = 0;
 
-  ConduitCursor(List<T> base) : super(base);
+  ConduitCursor(this.base);
+
+  @override
+  T operator [](int index) => base[index];
+  
+  @override
+  operator []=(int index, T value) => base[index] = value;
+
+  @override
+  int get length => base.length;
+
+  @override
+  set length(int value) => base.length = value;
 
   factory ConduitCursor.create(Map<String, dynamic> input, {int offset, T convert(item)}) {
     var allData = input["data"];
@@ -199,11 +218,11 @@ class ConduitBlob {
   ConduitBlob(this.base64);
 
   factory ConduitBlob.fromBytes(List<int> bytes) {
-    return new ConduitBlob(BASE64.encode(bytes));
+    return new ConduitBlob(const Base64Encoder().convert(bytes));
   }
 
   Uint8List read() {
-    var bytes = BASE64.decode(base64);
+    var bytes = const Base64Decoder().convert(base64);
 
     if (bytes is! Uint8List) {
       return new Uint8List.fromList(bytes);
@@ -213,6 +232,6 @@ class ConduitBlob {
   }
 
   String readText() {
-    return UTF8.decode(read());
+    return const Utf8Decoder().convert(read());
   }
 }

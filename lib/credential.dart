@@ -34,7 +34,7 @@ class ArcanistHostConfig {
 class ArcanistUserConfig {
   static Future<ArcanistUserConfig> loadFromFile(File file) async {
     var content = await file.readAsString();
-    return new ArcanistUserConfig(JSON.decode(content));
+    return new ArcanistUserConfig(const JsonDecoder().convert(content));
   }
 
   final Map<String, dynamic> json;

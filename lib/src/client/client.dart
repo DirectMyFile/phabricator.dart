@@ -29,6 +29,8 @@ final JsonEncoder _jsonEncoder = new JsonEncoder(
   }
 );
 
+final ContentType _formContentType = new ContentType("application", "x-www-form-urlencoded");
+
 class ConduitClient {
   final Uri baseUri;
 
@@ -54,17 +56,12 @@ class ConduitClient {
       };
     }
 
-    var response = await ConduitUtils.httpClient.post(
-      url,
-      body: {
-        "output": "json",
-        "params": JSON.encode(fullParams)
-      },
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    );
+    var request = await ConduitUtils.httpClient.postUrl(url);
+    request.headers.contentType = _formContentType;
 
+    var jsonParamsContent = _jsonEncoder.convert(fullParams);
+    request.write("output=json&params=${Uri.encodeComponent(jsonParamsContent)}");
+    var response = await request.close();
     return ConduitUtils.handleResponse(response);
   }
 

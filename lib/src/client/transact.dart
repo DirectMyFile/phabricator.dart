@@ -49,7 +49,12 @@ abstract class EditableConduitService<T extends ConduitObject>
   EditableConduitService(ConduitClient client, String type) : super(client, type);
 
   Future<ConduitEditResult> edit(String id, List<ConduitTransaction> transactions) async {
-    var rid = int.parse(id, onError: (_) => null);
+    var rid = null;
+    
+    try {
+      rid = int.parse(id);
+    } on FormatException {}
+
     if (rid == null) {
       rid = id;
     }

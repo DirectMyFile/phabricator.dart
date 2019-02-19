@@ -17,7 +17,8 @@ class OAuthUtils {
       "redirect_uri": redirectUri
     });
 
-    http.Response response = await ConduitUtils.httpClient.get(uri);
+    var request = await ConduitUtils.httpClient.getUrl(uri);
+    var response = await request.close();
 
     return ConduitUtils.handleResponse(
       response,

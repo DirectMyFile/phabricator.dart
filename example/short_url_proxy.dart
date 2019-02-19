@@ -5,6 +5,8 @@ import "package:phabricator/credential.dart";
 
 ConduitClient client;
 
+final ContentType _htmlContentType = new ContentType("text", "html", charset: "utf-8");
+
 main(List<String> args) async {
   int port = 2000;
 
@@ -15,7 +17,7 @@ main(List<String> args) async {
   client = await createDefaultConduitClient();
   await client.ping();
 
-  var server = await HttpServer.bind(InternetAddress.ANY_IP_V4, port);
+  var server = await HttpServer.bind("0.0.0.0", port);
 
   print("Short URL server listening on port ${port}");
 
@@ -41,8 +43,8 @@ handleRequest(HttpRequest request, HttpResponse response) async {
   });
 
   if (cursor.isEmpty) {
-    response.statusCode = HttpStatus.NOT_FOUND;
-    response.headers.contentType = ContentType.HTML;
+    response.statusCode = 404;
+    response.headers.contentType = _htmlContentType;
     response.writeln("<h3>Short URL not found.</h3>");
     await response.close();
     return;

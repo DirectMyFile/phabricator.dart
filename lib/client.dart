@@ -1,12 +1,10 @@
 library phabricator.client;
 
 import "dart:async";
-import "dart:convert";
+import "dart:convert" hide json;
+import "dart:collection";
+import "dart:io";
 import "dart:typed_data";
-
-import "package:http/http.dart" as http;
-
-import "package:collection/collection.dart";
 
 part "src/client/base.dart";
 part "src/client/conduit.dart";

@@ -115,7 +115,7 @@ class FileConduitService extends SearchableConduitService {
     } else if (data is List<int>) {
       bytes = new Uint8List.fromList(data);
     } else if (data is String) {
-      var result = UTF8.encode(data);
+      var result = const Utf8Encoder().convert(data);
       if (result is! Uint8List) {
         result = new Uint8List.fromList(result);
       }
